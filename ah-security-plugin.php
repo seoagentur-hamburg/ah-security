@@ -2,7 +2,7 @@
 /*
 * Plugin Name: AH Security
 * Description: Sicherheitseinstellungen für diese Website - NICHT DEAKTIVIEREN!
-* Version: 1.1.0
+* Version: 1.2.0
 * Author: Andreas Hecht
 * Author URI: https://andreas-hecht.com
 */
@@ -125,4 +125,19 @@ function ah_redirect_after_login_errors() {
   exit;
 }
 add_filter( 'login_errors', 'ah_redirect_after_login_errors' );
+endif;
+
+
+
+if ( ! function_exists( 'AH_remove_x_pingback' ) ) :
+/**
+ * Entfernen der XML-RPC Schnittstelle aus dem HTML-Header der Website
+ */
+
+ function AH_remove_x_pingback( $headers )
+ {
+ unset( $headers['X-Pingback'] );
+ return $headers;
+ }
+add_filter( 'wp_headers', 'AH_remove_x_pingback' );
 endif;
