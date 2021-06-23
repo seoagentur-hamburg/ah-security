@@ -3,8 +3,8 @@
 * Plugin Name: AH Security
 * Description: Sicherheitseinstellungen für diese Website - NICHT DEAKTIVIEREN!
 * Version: 1.2.0
-* Author: Andreas Hecht
-* Author URI: https://andreas-hecht.com
+* Author: SEO Agentur Hamburg
+* Author URI: https://seoagentur-hamburg.com/wordpress-sicherheit-service/
 */
 
 
@@ -114,18 +114,35 @@ $pass_reset_removed = new Password_Reset_Removed();
 
 
 
-
-if ( ! function_exists( 'ah_redirect_after_login_errors' ) ) :
-/**
- * Redirect auf Google nach falscher Eingabe der WP-Zugangsdaten
- */
-function ah_redirect_after_login_errors() {
-    
-  wp_redirect( 'https://www.google.de' );
-  exit;
+/*
+	Secure POST Requests
+	@ https://m0n.co/wp-requests
+    @ Anfragen an Formulare nur vom eigenen Server zulassen
+*/
+function shapeSpace_secure_post_requests() {
+	
+	if (isset($_SERVER['REQUEST_METHOD'])) {
+		
+		$method = $_SERVER['REQUEST_METHOD'];
+		
+		if (strtoupper($method) === 'POST') {
+			
+			$host = @gethostbyaddr($address);
+			
+			if ($host !== 'seychellen.com') {
+				
+				status_header(403);
+				exit;
+				
+			}
+			
+		}
+		
+	}
+	
 }
-add_filter( 'login_errors', 'ah_redirect_after_login_errors' );
-endif;
+add_action('parse_request', 'shapeSpace_secure_post_requests', 1);
+
 
 
 
